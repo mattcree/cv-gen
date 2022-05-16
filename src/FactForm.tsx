@@ -93,7 +93,8 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
       `I am ${name}.`,
       `I work for ${company}.`,
       `My role at ${company} is ${role}.`,
-      `I am a ${tone} person.`
+      `I am a ${tone} person.`,
+      `I need a new job`
     ];
 
     const companyProjects = groupBy(projects, "company");
@@ -106,13 +107,11 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
     const skillsIHave = skills.map((it) => `I am skilled with ${it}.`);
 
     const newJobDetails = [
-      `I am applying to the company ${newCompany} whose website is ${newCompanyUrl}.`,
-      `I am applying for the ${newRole} job at ${newCompany}.`
+      `I am applying for the ${newRole} at the company ${newCompany} whose website is ${newCompanyUrl}.`
     ];
 
     const command = [
-      `Write a ${tone} cover letter for the job at ${newCompany} emphasizing my ${tone} personality`,
-      `and in the cover letter, display as much knowledge of ${newCompany} as possible.`
+      `Write cover letter for the job at ${newCompany} displaying as much knowledge of ${newCompany} as possible.`
     ];
 
     return basics
