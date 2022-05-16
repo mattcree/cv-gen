@@ -1,5 +1,6 @@
 import React, { MouseEventHandler, useState } from "react";
 import FormField from "./FormField";
+import FormFieldWithButton from "./FormFieldWithButton";
 import { groupBy, last, initial } from "lodash";
 
 interface FactFormProps {
@@ -19,6 +20,7 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
 
   const [name, setName] = useState<string>(get("name") || "");
   const [company, setCompany] = useState<string>(get("company") || "");
+
   const [role, setRole] = useState<string>(get("role") || "");
 
   const [projectName, setProjectName] = useState<string>("");
@@ -47,6 +49,10 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
   const [skills, setSkills] = useState<string[]>(loadSkills());
 
   const [newCompany, setNewCompany] = useState<string>(get("newCompany") || "");
+  const [newCompanyUrl, setNewCompanyUrl] = useState<string>(
+    get("newCompanyUrl") || ""
+  );
+
   const [newRole, setNewRole] = useState<string>(get("newRole") || "");
 
   const describeCompanyProjects = (
@@ -100,13 +106,13 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
     const skillsIHave = skills.map((it) => `I am skilled with ${it}.`);
 
     const newJobDetails = [
-      `I am applying to the company ${newCompany}.`,
+      `I am applying to the company ${newCompany} whose website is ${newCompanyUrl}.`,
       `I am applying for the ${newRole} job at ${newCompany}.`
     ];
 
     const command = [
-      `Write a cover letter for the job at ${newCompany} emphasizing my ${tone} personality.`,
-      `In the cover letter, display as much knowledge of ${newCompany} as possible.`
+      `Write a ${tone} cover letter for the job at ${newCompany} emphasizing my ${tone} personality`,
+      `and in the cover letter, display as much knowledge of ${newCompany} as possible.`
     ];
 
     return basics
@@ -156,9 +162,7 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
     set("projects", JSON.stringify(allProjects));
   };
 
-  const setNewSkill = (e) => {
-    e.preventDefault();
-
+  const setNewSkill = () => {
     if (!skill) return;
 
     const allSkills = [skill, ...skills];
@@ -203,7 +207,7 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
           required
         />
 
-        <div>
+        <div className="my-3">
           {projects.length > 0 && (
             <>
               I have worked on the following projects
@@ -264,7 +268,7 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
           Add Project
         </button>
 
-        <div>
+        <div className="my-3">
           {skills.length > 0 && (
             <>
               I have the following skills
@@ -288,18 +292,17 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
           )}
         </div>
 
-        <FormField
+        <FormFieldWithButton
           fieldId="skill"
           value={skill}
           onInput={setSkill}
           placeholder="skill name"
           label="I am skilled with"
+          onEnter={setNewSkill}
+          buttonLabel="Add Skill"
+          onClick={setNewSkill}
           required={false}
         />
-
-        <button className="btn btn-primary" onClick={setNewSkill}>
-          Add Skill
-        </button>
 
         <FormField
           fieldId="newCompany"
@@ -308,6 +311,16 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
           placeholder="new company name"
           label="The company I am applying to is called"
           onBlur={() => set("newCompany", newCompany)}
+          required
+        />
+
+        <FormField
+          fieldId="newCompanyUrl"
+          value={newCompanyUrl}
+          onInput={setNewCompanyUrl}
+          placeholder="new company url"
+          label="The new company's URL is"
+          onBlur={() => set("newCompanyUrl", newCompanyUrl)}
           required
         />
 
@@ -332,12 +345,7 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
           }}
           defaultValue={tone}
         >
-          {[
-            "intelligent",
-            "unintelligent",
-            "big dick energy",
-            "scholarly and intelligent"
-          ].map((choice) => (
+          {["intelligent", "unintelligent", "creative"].map((choice) => (
             <option value={choice}>{choice}</option>
           ))}
         </select>

@@ -8,6 +8,7 @@ interface FormProps {
   label: string;
   required: boolean;
   onBlur: () => void;
+  onEnter?: () => void;
 }
 
 const FormField: React.FC<FormProps> = ({
@@ -17,6 +18,7 @@ const FormField: React.FC<FormProps> = ({
   placeholder,
   label,
   required,
+  onEnter,
   onBlur
 }) => {
   return (
@@ -30,6 +32,11 @@ const FormField: React.FC<FormProps> = ({
         value={value}
         onChange={(e) => onInput(e.currentTarget.value)}
         onBlur={onBlur}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            onEnter?.();
+          }
+        }}
         required={required}
       />
       <div className="valid-feedback">Looks good!</div>

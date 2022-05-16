@@ -1,7 +1,6 @@
 import { Configuration, OpenAIApi } from "openai";
 
-// Don't do this.
-const API_KEY = "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";
+const API_KEY = "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";
 
 const configuration = new Configuration({
   apiKey: API_KEY
