@@ -1,5 +1,6 @@
 import React, { MouseEventHandler, useState } from "react";
 import FormField from "./FormField";
+import { groupBy, last, initial } from "lodash";
 
 interface FactFormProps {
   prompt: (promptString: string) => Promise<string[]>;
@@ -48,8 +49,21 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
   const [newCompany, setNewCompany] = useState<string>(get("newCompany") || "");
   const [newRole, setNewRole] = useState<string>(get("newRole") || "");
 
-  const describeProject = (project: Project): string => {
-    return `I worked on ${project.name} at ${project.company} which was a project about ${project.description}.`;
+  const describeCompanyProjects = (
+    company: string,
+    projects: Project[]
+  ): string => {
+    const prefix = `At ${company} I worked on `;
+    const middleProjects: Project[] = initial(projects);
+    const lastProject: Project = last(projects);
+
+    const middle = middleProjects
+      .map((project) => `${project.name}, ${project.description}`)
+      .join("; ");
+
+    const suffix = `and ${lastProject.name}, ${lastProject.description}.`;
+
+    return prefix + middle + suffix;
   };
 
   const removeProject = (project: Project) => {
@@ -76,9 +90,12 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
       `I am a ${tone} person.`
     ];
 
-    const projectsWorkedOn = projects
-      .filter((it) => !!it.description || !!it.name)
-      .map(describeProject);
+    const companyProjects = groupBy(projects, "company");
+    const companies = Object.keys(companyProjects);
+
+    const projectsWorkedOn = companies.map((company) =>
+      describeCompanyProjects(company, companyProjects[company])
+    );
 
     const skillsIHave = skills.map((it) => `I am skilled with ${it}.`);
 
