@@ -111,7 +111,7 @@ const FactForm: React.FC<FactFormProps> = ({ prompt, set, get }) => {
     ];
 
     const command = [
-      `Write cover letter for the job at ${newCompany} displaying as much knowledge of ${newCompany} as possible.`
+      `Write a modest cover letter for the job at ${newCompany} that displays as much knowledge of ${newCompany} as possible, while also emphasizing my skills and how they relate to the ${newRole} role.`
     ];
 
     return basics
